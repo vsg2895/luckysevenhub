@@ -1,0 +1,203 @@
+import type { Metadata } from 'next'
+import Image from 'next/image'
+import Link from 'next/link'
+import { notFound } from 'next/navigation'
+import { getCasino } from '@/lib/api'
+import { buildCasinoReviewSchema, buildBreadcrumbSchema, buildWebPageSchema, breadcrumbIdFor, jsonLdScript } from '@/lib/seo'
+import { resolveImageUrl } from '@/lib/images'
+import CasinoSpecialOffers from '@/components/CasinoSpecialOffers'
+import CasinoReviews from '@/components/CasinoReviews'
+import { COPY } from '@/constants/copy'
+import { SITE_URL } from '@/lib/config'
+
+const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME ?? ''
+
+type Props = { params: Promise<{ slug: string }> }
+
+
+/*
+ * NO generateStaticParams, deliberately — this route renders on demand.
+ *
+ * Next classifies a dynamic route from what that function RETURNS: a non-empty
+ * list builds `f` (dynamic), an EMPTY list builds a fully static route. A
+ * static render then throws DYNAMIC_SERVER_USAGE, because the root layout
+ * reads the session cookie for the header's account control and a static
+ * render may not touch cookies — taking the whole route down with a 500 for
+ * every slug, valid or not.
+ *
+ * Not hypothetical: that is exactly how /special-offers/[slug] broke on the
+ * one site with no visible offers. It was reachable here too, because the
+ * params lookup failed CLOSED to an empty list, so one API blip was enough to
+ * change the build shape.
+ *
+ * Removing the function pins the route dynamic whatever the data does.
+ * `force-dynamic` is deliberately NOT used: it would also downgrade fetchCache
+ * to no-store and send every request to the API, where this leaves the
+ * existing per-fetch cache and its tags exactly as they were.
+ */
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params
+  try {
+    const { data: casino } = await getCasino(slug)
+    const title = casino.meta_title ?? `${casino.name} Review`
+    // A casino record is shared by every site, so the fallback must carry THIS
+    // site's voice — otherwise all four domains ship the same description for
+    // the same casino. An admin-set meta_description still wins, and is shared
+    // by design; per-site overrides would need columns on the casino_site pivot.
+    // An admin-entered meta_description is shared master data, so this site's
+    // short signature is appended rather than the value being used verbatim —
+    // otherwise filling the field in the admin would put the identical
+    // description back on all four domains. No value set: fall back to the
+    // site's own full line.
+    const description = casino.meta_description
+      ? `${casino.meta_description} ${COPY.casinos.reviewSignature}`
+      : `${casino.name} — ${COPY.casinos.reviewSummary}`
+    // The `title` above is the casino's own meta_title — shared master data, so
+    // it is byte-identical on every domain in the network. The share card is
+    // where that was most visible: six results, one headline. This site's tail
+    // makes the card its own without touching the shared record.
+    const shareTitle = `${title} — ${COPY.casinos.reviewTitleTail}`
+    return {
+      title,
+      description,
+      alternates: { canonical: `/casinos/${slug}` },
+      openGraph: { type: 'article', url: `/casinos/${slug}`, siteName: SITE_NAME, title: shareTitle, description },
+      twitter: { card: 'summary_large_image', title: shareTitle, description },
+    }
+  } catch {
+    return { title: COPY.errors.notFound }
+  }
+}
+
+export default async function CasinoDetailPage({ params }: Props) {
+  const { slug } = await params
+
+  let casino
+  try {
+    casino = (await getCasino(slug)).data
+  } catch {
+    notFound()
+  }
+
+  const banner = resolveImageUrl(casino.banner_image)
+  const logo = resolveImageUrl(casino.image_path)
+  const pageUrl = `${SITE_URL}/casinos/${slug}`
+  // Facts for the summary panel below the CTA.
+  const categoryNames = (casino.categories ?? []).map((c) => c.name)
+  const liveOffers = (casino.special_offers ?? []).length
+  const reviewSchema = buildCasinoReviewSchema(casino)
+  const breadcrumb = buildBreadcrumbSchema(
+    [
+      { name: 'Home', url: SITE_URL },
+      { name: 'Casinos', url: `${SITE_URL}/casinos` },
+      { name: casino.name, url: pageUrl },
+    ],
+    pageUrl,
+  )
+  // One graph per page: the WebPage node anchors this URL into the site graph
+  // and points at its own breadcrumb, so the review and the trail are read as
+  // parts of one page rather than three unrelated blocks.
+  const graph = [
+    buildWebPageSchema({
+      name: `${casino.name} Review`,
+      url: pageUrl,
+      // Same composition as the <meta> description in generateMetadata. Passing
+      // the raw shared `meta_description` here put an identical WebPage
+      // description on all six domains for the same casino.
+      description: casino.meta_description
+        ? `${casino.meta_description} ${COPY.casinos.reviewSignature}`
+        : `${casino.name} — ${COPY.casinos.reviewSummary}`,
+      breadcrumbId: breadcrumbIdFor(pageUrl),
+      dateModified: casino.updated_at,
+    }),
+    breadcrumb,
+    reviewSchema,
+  ]
+
+  return (
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdScript(graph) }} />
+
+      <main className="py-12 px-4">
+        <div className="container mx-auto max-w-3xl">
+          <nav className="mb-6 text-sm text-faint">
+            <Link href="/" className="inline-block -mx-1 px-1 py-3 -my-3 hover:text-brand">Home</Link> / <Link href="/casinos" className="inline-block -mx-1 px-1 py-3 -my-3 hover:text-brand">Casinos</Link> / <span className="text-ink-soft">{casino.name}</span>
+          </nav>
+
+          {banner && (
+            <div className="relative mb-6 aspect-[16/5] overflow-hidden rounded-2xl bg-cream">
+              <Image src={banner} alt={`${casino.name} banner`} fill className="object-contain" sizes="(max-width: 768px) 100vw, 768px" priority />
+            </div>
+          )}
+
+          <header className="flex items-center gap-4">
+            {logo && <Image src={logo} alt={`${casino.name} logo`} width={64} height={64} sizes="64px" className="rounded object-contain" />}
+            <div>
+              <h1 className="font-display text-4xl font-semibold text-ink">{casino.name}</h1>
+              <p className="mt-1 text-gold" aria-label={`${casino.rating} out of 5`}>{'★'.repeat(casino.rating)}<span className="text-line-soft">{'★'.repeat(5 - casino.rating)}</span></p>
+            </div>
+          </header>
+
+          {casino.bonuses && (
+            <p className="mt-4 rounded-xl bg-win-bg px-5 py-4 text-lg font-bold text-win">{casino.bonuses}</p>
+          )}
+
+          <a href={casino.attachment.affiliate_url} target="_blank" rel="nofollow sponsored noopener" className="mt-6 inline-block rounded-xl bg-gradient-to-b from-brand-soft to-brand-dark px-10 py-4 font-bold text-white shadow-md shadow-brand/25 transition-transform hover:-translate-y-0.5">
+            {COPY.casinos.visitCasino}
+          </a>
+
+
+          {/* Summary panel — the same at-a-glance facts the sibling sites show,
+              so a reader gets rating, offer count, categories and revision date
+              without scrolling the review. Every row is conditional: a casino
+              with no offers or no categories simply renders fewer rows. */}
+          <section className="mt-8 rounded-2xl border border-line bg-paper p-6" aria-labelledby="at-a-glance">
+            <h2 id="at-a-glance" className="font-display text-xl font-semibold text-ink">
+              {casino.name} {COPY.casinos.glanceHeadingTail}
+            </h2>
+            <dl className="mt-4 grid grid-cols-1 gap-x-8 gap-y-4 sm:grid-cols-3">
+              <div>
+                <dt className="text-xs font-semibold uppercase tracking-[0.15em] text-faint">{COPY.casinos.rating}</dt>
+                <dd className="mt-1 text-ink">{casino.rating} out of 5</dd>
+              </div>
+              {liveOffers > 0 && (
+                <div>
+                  <dt className="text-xs font-semibold uppercase tracking-[0.15em] text-faint">Offers listed</dt>
+                  <dd className="mt-1 text-ink">
+                    {liveOffers} {liveOffers === 1 ? 'offer' : 'offers'} on this page
+                  </dd>
+                </div>
+              )}
+              {categoryNames.length > 0 && (
+                <div>
+                  <dt className="text-xs font-semibold uppercase tracking-[0.15em] text-faint">Listed under</dt>
+                  <dd className="mt-1 text-ink">{categoryNames.join(', ')}</dd>
+                </div>
+              )}
+            </dl>
+          </section>
+
+          {casino.description && (
+            <div className="prose mt-8 max-w-none" dangerouslySetInnerHTML={{ __html: casino.description }} />
+          )}
+
+          {casino.categories && casino.categories.length > 0 && (
+            <div className="mt-8 flex flex-wrap gap-2">
+              {casino.categories.map((c) => (
+                <Link key={c.id} href={`/categories/${c.slug}`} className="inline-flex min-h-11 items-center rounded-full bg-cream px-4 py-1.5 text-sm text-ink-soft transition-colors hover:bg-brand/10 hover:text-brand">{c.name}</Link>
+              ))}
+            </div>
+          )}
+
+          <CasinoSpecialOffers offers={casino.special_offers ?? []} />
+
+          {/* Renders nothing at all until this site's "Visitor reviews"
+              switch is on in the admin — the component gates itself on the
+              endpoint's 404, so no per-site conditional is needed here. */}
+          <CasinoReviews casinoSlug={casino.slug} casinoName={casino.name} />
+        </div>
+      </main>
+    </>
+  )
+}

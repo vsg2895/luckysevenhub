@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 34 34">
+  <!-- LuckySevenHub mark: cobalt plate, white seven, lemon star.
+       The first <rect fill> is read by app/apple-icon.tsx as the background
+       plate, so it must stay the first element. -->
+  <rect width="34" height="34" rx="10" fill="#2541b2"/>
+  <path d="M10 9.5h14l-7.6 15.5" fill="none" stroke="#ffffff" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M24.5 19.2l1.15 2.35 2.6.38-1.88 1.83.44 2.59-2.31-1.22-2.31 1.22.44-2.59-1.88-1.83 2.6-.38z" fill="#ffdd33"/>
+</svg>

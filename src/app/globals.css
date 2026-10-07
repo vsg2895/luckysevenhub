@@ -1,0 +1,233 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+/* LuckySevenHub — white ground with a lemon-cream band, cobalt primary, lemon
+   accent, 18px radius. Palette and type lifted from sites/luckysevenhub.html.
+   Fonts: Figtree (body) + Unbounded (display).
+
+   TOKEN NAMES are identical to the sibling sites (cream/paper/ink/brand/…) so
+   every shared component works here unchanged — only the values differ. This
+   one is LIGHT, unlike its two most recent siblings, so `cream` and `ink` sit
+   at opposite ends again: `cream` is the page, `ink` is the type on it. */
+:root {
+  --background: #ffffff;
+  --foreground: #15151a;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  /* `cream` is the BASE page surface — white here — `paper` the raised panel,
+     and `surface` the lemon-cream band the design bends sections onto. */
+  --color-cream: #ffffff;
+  --color-paper: #ffffff;
+  --color-surface: #fffbea;
+
+  --color-ink: #15151a;
+  --color-ink-soft: #2b2b33;
+  --color-muted: #575763;
+  --color-faint: #8a8a94;
+
+  /* Cobalt primary, flat — no gradient anywhere in this design. */
+  --color-brand: #2541b2;
+  --color-brand-dark: #1b3291;
+  --color-brand-soft: #e8ecfa;
+  --color-brand-ink: #ffffff;
+
+  /* Lemon secondary: the highlight behind "Zero luck", the second reel, the
+     subscribe button and the hard shadow a card throws on hover. */
+  --color-accent: #ffdd33;
+  --color-accent-dark: #f5cd00;
+  --color-accent-ink: #1a1a12;
+
+  --color-line: #e7e5dc;
+  --color-line-soft: #cfcbbb;
+
+  --color-gold: #f5cd00;
+  --color-win: #1d7a4c;
+  --color-win-bg: #e8f5ee;
+
+  --font-sans: var(--font-figtree);
+  --font-display: var(--font-unbounded);
+  --font-mono: var(--font-geist-mono);
+
+  /* 18px panels; buttons are 14px, which is why they are not the same token. */
+  --radius-ls: 18px;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-figtree), system-ui, Arial, Helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.font-display {
+  font-family: var(--font-unbounded), system-ui, sans-serif;
+  letter-spacing: -0.02em;
+}
+
+/* The hero ground: a dot grid, masked to fade out before the section edges.
+   The design has no gradients at all — the energy comes from the lemon
+   highlight and the hard shadows, not from a wash. */
+.hero-wash {
+  background-color: var(--color-cream);
+  background-image: radial-gradient(var(--color-line) 1.2px, transparent 1.2px);
+  background-size: 22px 22px;
+  -webkit-mask-image: radial-gradient(70% 80% at 50% 40%, #000 30%, transparent 80%);
+  mask-image: radial-gradient(70% 80% at 50% 40%, #000 30%, transparent 80%);
+}
+
+/* A slot reel. Three of them carry the "777" above the headline — the one
+   piece of ornament this design allows itself. */
+.reel {
+  background: linear-gradient(180deg, #f4f5fb 0%, #fff 22%, #fff 78%, #f4f5fb 100%);
+  border: 2px solid var(--color-ink);
+  border-radius: 16px;
+}
+
+/* The hard lemon shadow a card throws on hover — offset, not blurred, which is
+   what makes it read as printed rather than lifted. */
+.card-pop {
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.card-pop:hover {
+  border-color: var(--color-ink);
+  box-shadow: 6px 6px 0 var(--color-accent);
+}
+
+/* ── Responsive safety net (all phones / tablets / laptops / large screens) ── */
+html {
+  -webkit-text-size-adjust: 100%; /* no iOS text auto-inflation on rotate */
+}
+body {
+  overflow-x: clip; /* never scroll the page sideways; safe with the sticky header */
+}
+
+/* Hide the scrollbar on horizontally-scrollable rows (e.g. the mobile nav). */
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Scraped HTML content (casino / offer descriptions) must stay in its column
+   on small screens: wrap long words, cap media width, scroll wide tables. */
+.prose {
+  overflow-wrap: break-word;
+}
+
+/* ── Prose colours ──────────────────────────────────────────────────────────
+   The plugin's own greys are close to this site's, but not the same ones: the
+   body would be grey-700 where everything else is `ink-soft`, and links would
+   be the plugin's blue rather than cobalt. Every value is pinned to this
+   site's tokens instead — one place, and it cannot drift from the palette
+   above. This matters more on a re-theme than it looks: the same block on the
+   dark siblings is what keeps their legal pages readable at all. */
+.prose {
+  --tw-prose-body: var(--color-ink-soft);
+  --tw-prose-headings: var(--color-ink);
+  --tw-prose-lead: var(--color-muted);
+  --tw-prose-links: var(--color-brand-soft);
+  --tw-prose-bold: var(--color-ink);
+  --tw-prose-counters: var(--color-muted);
+  --tw-prose-bullets: var(--color-line-soft);
+  --tw-prose-hr: var(--color-line);
+  --tw-prose-quotes: var(--color-ink);
+  --tw-prose-quote-borders: var(--color-brand);
+  --tw-prose-captions: var(--color-faint);
+  --tw-prose-code: var(--color-ink);
+  --tw-prose-pre-code: var(--color-ink-soft);
+  --tw-prose-pre-bg: var(--color-surface);
+  --tw-prose-th-borders: var(--color-line-soft);
+  --tw-prose-td-borders: var(--color-line);
+  /* `prose-invert` swaps to these, so they carry the same values — otherwise
+     the class would quietly undo everything above. */
+  --tw-prose-invert-body: var(--color-ink-soft);
+  --tw-prose-invert-headings: var(--color-ink);
+  --tw-prose-invert-lead: var(--color-muted);
+  --tw-prose-invert-links: var(--color-brand-soft);
+  --tw-prose-invert-bold: var(--color-ink);
+  --tw-prose-invert-counters: var(--color-muted);
+  --tw-prose-invert-bullets: var(--color-line-soft);
+  --tw-prose-invert-hr: var(--color-line);
+  --tw-prose-invert-quotes: var(--color-ink);
+  --tw-prose-invert-quote-borders: var(--color-brand);
+  --tw-prose-invert-captions: var(--color-faint);
+  --tw-prose-invert-code: var(--color-ink);
+  --tw-prose-invert-pre-code: var(--color-ink-soft);
+  --tw-prose-invert-pre-bg: var(--color-surface);
+  --tw-prose-invert-th-borders: var(--color-line-soft);
+  --tw-prose-invert-td-borders: var(--color-line);
+}
+
+/* And the colours again, directly on the elements.
+   The variables above are the plugin's own mechanism, and they do work — but
+   they route through two indirections (`--tw-prose-headings` →
+   `--tw-prose-invert-*` → a theme token), and a missing link in that chain
+   hands the heading back to the plugin's default. These rules do not depend on
+   the chain at all. `:where()` keeps specificity at zero, exactly as the plugin
+   does, so a utility class on the element still wins. */
+.prose {
+  color: var(--color-ink-soft);
+}
+.prose :where(h1, h2, h3, h4, h5, h6) {
+  color: var(--color-ink);
+}
+.prose :where(strong, b, th, dt) {
+  color: var(--color-ink);
+}
+.prose :where(a) {
+  color: var(--color-brand-soft);
+}
+.prose :where(li)::marker,
+.prose :where(ol > li)::marker {
+  color: var(--color-line-soft);
+}
+.prose :where(blockquote) {
+  color: var(--color-ink);
+  border-inline-start-color: var(--color-brand);
+}
+.prose :where(hr) {
+  border-color: var(--color-line);
+}
+.prose :where(code) {
+  color: var(--color-ink);
+}
+.prose :where(img, video, iframe) {
+  max-width: 100%;
+  height: auto;
+}
+.prose :where(table) {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+}
+.prose :where(pre) {
+  overflow-x: auto;
+}
+
+/* ── Touch readability floor (phones and tablets, ≤1024px) ──
+   `text-xs` is 12px on desktop, where it suits eyebrow labels and footer
+   meta, but 12px body-ish text on a phone fails the 14px readability floor;
+   raise it to 14px there. Form fields go to 16px because iOS Safari zooms the
+   whole page when a smaller field takes focus. Width-based rather than
+   `pointer: coarse` on purpose: an iPad in a desktop-class browser reports a
+   fine pointer and would be missed. Unlayered on purpose so it wins over the
+   `@layer utilities` Tailwind classes regardless of source order. */
+@media (max-width: 1024px) {
+  .text-xs,
+  .sm\:text-xs,
+  .md\:text-xs,
+  .lg\:text-xs {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+  }
+  input:not([type='checkbox']):not([type='radio']):not([type='range']),
+  select,
+  textarea {
+    font-size: 1rem;
+  }
+}
