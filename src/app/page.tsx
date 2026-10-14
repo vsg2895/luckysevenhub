@@ -215,12 +215,29 @@ export default async function HomePage({ searchParams }: Props) {
                 * stay the brightest thing in the band. A saturated panel would
                 * flatten them by contrast.
                 */}
-              <div className="relative overflow-hidden rounded-3xl bg-paper px-4 py-6 shadow-[0_18px_40px_-28px_rgba(15,23,42,0.40)] ring-1 ring-line sm:px-8 sm:py-8">
+              {/*
+                * The panel is the PAGE'S OWN GROUND with a wash of this site's
+                * colour over it — not `bg-paper`.
+                *
+                * Paper is what the CHIPS are made of (and on crogambline a chip
+                * is a border with nothing behind it at all), so a paper panel
+                * left every chip invisible and the row read as a wireframe
+                * table: hairlines on a flat field. Putting the panel on the
+                * ground the chips normally sit on restores the contrast they
+                * are designed for, and the tint is what makes it a band rather
+                * than empty page.
+                *
+                * No ring either. On a dark ground a `ring-line` drew a hard
+                * rectangle around the whole block — one more line in a block
+                * whose problem was lines. The tint gives it its edge.
+                */}
+              <div className="relative overflow-hidden rounded-3xl bg-cream px-4 py-6 shadow-[0_18px_40px_-30px_rgba(15,23,42,0.35)] sm:px-8 sm:py-8">
                 {/* Decoration only. No -z-10: the panel paints its own
                     background, and a layer sent behind it would never be seen. */}
                 <div aria-hidden className="pointer-events-none absolute inset-0">
+                  <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(37,65,178,0.08),transparent_62%)]" />
                   <div className="absolute -left-24 -top-28 h-72 w-72 rounded-full bg-[radial-gradient(circle,rgba(37,65,178,0.14),transparent_70%)] blur-2xl" />
-                  <div className="absolute -right-20 -bottom-28 h-72 w-72 rounded-full bg-[radial-gradient(circle,rgba(255,221,51,0.20),transparent_70%)] blur-2xl" />
+                  <div className="absolute -right-20 -bottom-28 h-72 w-72 rounded-full bg-[radial-gradient(circle,rgba(255,221,51,0.22),transparent_70%)] blur-2xl" />
                 </div>
 
                 <div className="relative">
