@@ -70,9 +70,20 @@ body {
 
 /* The hero ground: a dot grid, masked to fade out before the section edges.
    The design has no gradients at all — the energy comes from the lemon
-   highlight and the hard shadows, not from a wash. */
+   highlight and the hard shadows, not from a wash.
+   The grid lives on a pseudo-element so ONLY the dots are masked: a mask on
+   the section itself faded the headline, buttons and checks along with them,
+   which washed them out on a phone where the hero is short and narrow. */
 .hero-wash {
+  isolation: isolate;
   background-color: var(--color-cream);
+}
+.hero-wash::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
   background-image: radial-gradient(var(--color-line) 1.2px, transparent 1.2px);
   background-size: 22px 22px;
   -webkit-mask-image: radial-gradient(70% 80% at 50% 40%, #000 30%, transparent 80%);
