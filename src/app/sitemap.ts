@@ -32,7 +32,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const categoryUrls: MetadataRoute.Sitemap =
     categoriesRes.status === 'fulfilled'
-      ? categoriesRes.value.data.map((c) => ({
+      ? categoriesRes.value.data
+          // An empty category is noindex (see categories/[slug]), so it is not submitted.
+          .filter((c) => (c.casinos_count ?? 0) > 0)
+          .map((c) => ({
           url: `${SITE_URL}/categories/${c.slug}`,
           lastModified: safeDate(c.updated_at),
           changeFrequency: 'weekly',
