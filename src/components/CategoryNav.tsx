@@ -18,14 +18,20 @@ export default function CategoryNav({
 }) {
   return (
     /*
-     * ONE FULL-WIDTH COLUMN ON A PHONE, a content-sized wrapping row from
-     * 640px up.
+     * ONE FULL-WIDTH COLUMN ON A PHONE; from 640px up, a grid of EQUAL chips,
+     * every one as wide as the widest label.
      *
-     * Content sizing is right on a desktop, where the chips sit in one row and
-     * their differing widths read as differing words. On a phone the same rule
-     * produced a ragged stack — chips measured 156–187px wide, so some rows
-     * held two and some held one and no two edges lined up, which reads as
-     * unrelated buttons rather than one set of filters.
+     * Content-sized chips (the previous rule) gave every tab a different
+     * width, so "Free Spins" beside "Crypto Oriented" read as unequal buttons
+     * rather than one set of filters. The grid is `w-max`, so its `1fr` tracks
+     * resolve to the widest chip's max-content width and every chip shares it
+     * — no measured pixel value to go stale when a category is renamed. The
+     * column count steps up with the breakpoints (2 / 3 / 4 / 5) so the widest
+     * chip still fits the container at each.
+     *
+     * On a phone the chips stack instead: measured content-sized they came out
+     * 156–187px wide, so some rows held two and some one, and no two edges
+     * lined up.
      *
      * Two equal columns do not fit: the widest chip needs ~187px and a
      * half-width track at 390px is ~166px, so a nowrap label would be pushed
@@ -44,7 +50,7 @@ export default function CategoryNav({
         countClassName="text-xs text-faint"
         actionClassName="text-brand"
       >
-      <nav aria-label="Casino categories" className="grid grid-cols-1 gap-2 sm:flex sm:flex-wrap sm:gap-3">
+      <nav aria-label="Casino categories" className="grid grid-cols-1 gap-2 sm:w-max sm:grid-cols-[repeat(2,1fr)] md:grid-cols-[repeat(3,1fr)] lg:grid-cols-[repeat(4,1fr)] xl:grid-cols-[repeat(5,1fr)] sm:gap-3">
       {categories.map((c) => {
         const active = c.slug === selected
         return (
@@ -82,7 +88,7 @@ export default function CategoryNav({
             // across the top of the selected chip. Sizing the gradient to the border
             // box instead leaves nothing to repeat. No other button on this site
             // hits it: they all have gradients but none has a border.
-            className={`flex w-full justify-center sm:flex sm:w-auto sm:justify-start items-center gap-2 rounded-full px-5 py-3 text-sm font-semibold transition-all ${
+            className={`flex w-full justify-center whitespace-nowrap items-center gap-2 rounded-full px-5 py-3 text-sm font-semibold transition-all ${
               active
                 ? 'border border-transparent bg-origin-border bg-gradient-to-b from-brand-soft to-brand-dark text-white shadow-md shadow-brand/25'
                 : 'border border-line-soft bg-paper text-ink hover:border-brand hover:text-brand'
