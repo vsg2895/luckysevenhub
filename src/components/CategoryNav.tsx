@@ -5,7 +5,7 @@ import type { Category } from '@shared/types/category'
 /**
  * LuckySevenHub category selector, from sites/luckysevenhub-redesign.html:
  * chunky tags with the count in a badge on the corner; the current category is
- * the ink tag with a yellow badge.
+ * the blue tag with a yellow badge.
  *
  * On a phone the chips stack, one per row, each the full width of the column;
  * from sm they are one row of EQUAL chips — `w-max` + `1fr` columns, so every
@@ -37,7 +37,7 @@ export default function CategoryNav({
                 href={`/categories/${c.slug}`}
                 aria-current={active ? 'page' : undefined}
                 className={`relative flex min-h-11 w-full items-center justify-center gap-2 whitespace-nowrap rounded-[14px] border-2 px-[18px] text-sm font-bold transition-colors ${
-                  active ? 'border-ink bg-ink text-white' : 'border-line-soft bg-white text-ink hover:border-ink'
+                  active ? 'border-brand bg-brand text-white' : 'border-line-soft bg-white text-ink hover:border-brand'
                 }`}
               >
                 {/* The category's own icon, as in the Casinos menu. A plain <img>:

@@ -144,7 +144,7 @@ export default function ReviewForm({ casinoSlug }: { casinoSlug: string }) {
               onClick={() => setRating(n)}
               className={`h-11 w-11 rounded-xl border text-sm font-semibold transition-colors ${
                 rating >= n
-                  ? 'border-ink bg-accent text-ink'
+                  ? 'border-brand bg-accent text-ink'
                   : 'border-line-soft bg-paper text-faint hover:border-brand'
               }`}
             >

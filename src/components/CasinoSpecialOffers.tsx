@@ -38,7 +38,7 @@ export default function CasinoSpecialOffers({ offers, logo = null }: { offers: S
               onClick={() => setPage((p) => Math.max(0, p - 1))}
               disabled={page === 0}
               aria-label="Previous offers"
-              className="grid h-11 w-11 shrink-0 place-items-center rounded-xl border-2 border-line-soft text-muted transition-colors hover:border-ink hover:text-ink disabled:opacity-40 disabled:hover:border-line-soft disabled:hover:text-muted"
+              className="grid h-11 w-11 shrink-0 place-items-center rounded-xl border-2 border-line-soft text-muted transition-colors hover:border-brand hover:text-brand disabled:opacity-40 disabled:hover:border-line-soft disabled:hover:text-muted"
             >
               ←
             </button>
@@ -53,7 +53,7 @@ export default function CasinoSpecialOffers({ offers, logo = null }: { offers: S
               onClick={() => setPage((p) => Math.min(pageCount - 1, p + 1))}
               disabled={page === pageCount - 1}
               aria-label="More offers"
-              className="grid h-11 w-11 shrink-0 place-items-center rounded-xl border-2 border-line-soft text-muted transition-colors hover:border-ink hover:text-ink disabled:opacity-40 disabled:hover:border-line-soft disabled:hover:text-muted"
+              className="grid h-11 w-11 shrink-0 place-items-center rounded-xl border-2 border-line-soft text-muted transition-colors hover:border-brand hover:text-brand disabled:opacity-40 disabled:hover:border-line-soft disabled:hover:text-muted"
             >
               →
             </button>

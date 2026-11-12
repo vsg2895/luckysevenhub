@@ -41,7 +41,7 @@ export default function BonusTerms({ terms }: { terms: SpecialOfferTerms }) {
       {rows.length > 0 && (
         <dl>
           {rows.map(([label, value]) => (
-            <div key={label} className="flex justify-between gap-3 border-b-2 border-dashed border-ink/25 py-2.5 font-semibold">
+            <div key={label} className="flex justify-between gap-3 border-b-2 border-dashed border-brand/30 py-2.5 font-semibold">
               <dt className="text-[#5a5130]">{label}</dt>
               {/* Tabular figures so the numbers line up between one offer and
                   the next and can be compared down a page. */}
@@ -52,7 +52,7 @@ export default function BonusTerms({ terms }: { terms: SpecialOfferTerms }) {
       )}
 
       {(terms.terms_url || (terms.expires_at && !terms.expired)) && (
-        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 border-b-2 border-dashed border-ink/25 py-1.5 text-[13px]">
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 border-b-2 border-dashed border-brand/30 py-1.5 text-[13px]">
           {terms.expires_at && !terms.expired && (
             <span className="text-[#5a5130]">
               Offer ends{' '}

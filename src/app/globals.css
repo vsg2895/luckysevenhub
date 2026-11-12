@@ -100,7 +100,7 @@ body {
 .btn-white {
   background: #fff;
   color: var(--color-ink);
-  border: 2px solid var(--color-ink);
+  border: 2px solid var(--color-brand);
   border-radius: 14px;
   transition: background 0.15s;
 }

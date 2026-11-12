@@ -68,18 +68,24 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
   try {
     const { data: offer } = await getSpecialOffer(slug)
-    const title = offer.title
+    // This site's meta title / description, when the admin or the SEO seeder
+    // set one (the API already resolves the site's own override over the
+    // offer's default); otherwise the composed fallbacks below.
+    const title = offer.meta_title?.trim() || offer.title
     /*
      * The written description first; the `bonuses` composition only as a
      * fallback for an offer nobody has written up yet — a content gap this file
      * cannot close, not something to paper over with longer boilerplate.
      */
     const prose = plainDescription(offer.description)
-    const description = prose !== ''
-      ? metaLength(prose)
-      : offer.bonuses
-        ? `${offer.bonuses} — ${COPY.specialOffers.offerMetaSuffix}`
-        : `${offer.title} — ${COPY.specialOffers.offerMetaSuffix}`
+    const metaDescription = offer.meta_description?.trim() ?? ''
+    const description = metaDescription !== ''
+      ? metaLength(metaDescription)
+      : prose !== ''
+        ? metaLength(prose)
+        : offer.bonuses
+          ? `${offer.bonuses} — ${COPY.specialOffers.offerMetaSuffix}`
+          : `${offer.title} — ${COPY.specialOffers.offerMetaSuffix}`
     return {
       title,
       description,
@@ -281,7 +287,7 @@ export default async function SpecialOfferDetailPage({ params }: Props) {
             <div className="mt-2.5">
               {offer.terms && <BonusTerms terms={offer.terms} />}
               {offer.casino && (
-                <div className="flex justify-between gap-3 border-b-2 border-dashed border-ink/25 py-2.5 font-semibold">
+                <div className="flex justify-between gap-3 border-b-2 border-dashed border-brand/30 py-2.5 font-semibold">
                   <span className="text-[#5a5130]">Offer by</span>
                   <b>{offer.casino.name}</b>
                 </div>
