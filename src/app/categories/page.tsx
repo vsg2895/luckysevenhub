@@ -33,10 +33,10 @@ export default async function CategoriesPage() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdScript(webPage) }} />
       <main className="py-6 px-4 sm:py-12">
-      <div className="container mx-auto max-w-5xl">
+      <div className="mx-auto max-w-[1200px]">
         <header className="mb-4 sm:mb-8">
-          <h1 className="text-2xl font-bold sm:text-3xl text-ink">{COPY.categories.pageTitle}</h1>
-          <p className="mt-1 text-sm text-muted sm:mt-2 sm:text-base">{COPY.categories.pageDescription}</p>
+          <h1 className="font-display text-[30px] font-bold leading-[1.08] text-ink sm:text-[44px]">{COPY.categories.pageTitle}</h1>
+          <p className="mt-3 max-w-[560px] text-muted">{COPY.categories.pageDescription}</p>
         </header>
         {categories.length === 0 ? (
           <p className="text-muted">{COPY.categories.noResults}</p>
@@ -44,7 +44,7 @@ export default async function CategoriesPage() {
           <ul className="grid auto-rows-fr grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4">
             {categories.map((c) => (
               <li key={c.id}>
-                <Link href={`/categories/${c.slug}`} className="flex h-full items-center justify-center rounded-2xl border border-line bg-paper p-4 sm:p-6 text-center font-semibold text-ink shadow-sm hover:border-brand hover:text-brand transition-colors">
+                <Link href={`/categories/${c.slug}`} className="card-pop flex h-full items-center justify-center rounded-[22px] border-2 border-line bg-white p-4 text-center font-bold text-ink sm:p-6">
                   {/* Icon beside the name, as on the chips and in the Casinos menu. */}
                   <span className="inline-flex items-center justify-center gap-2">
                     {c.logo_path && (
