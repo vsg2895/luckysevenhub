@@ -200,18 +200,20 @@ export default async function CasinoDetailPage({ params }: Props) {
         )}
 
         {/* The ID card: logo, name, score, offer, and the CTA at the end of the
-            row from lg (under the rest below it). */}
-        <div className="mt-3.5 grid grid-cols-[88px_minmax(0,1fr)] items-center gap-x-5 gap-y-4 rounded-[26px] border-2 border-brand p-5 shadow-[0_6px_0_var(--color-brand-dark)] sm:grid-cols-[150px_minmax(0,1fr)] sm:p-[22px] lg:grid-cols-[180px_minmax(0,1fr)_auto]">
+            row from lg (under the rest below it). Below 416px the logo sits ABOVE
+            the name: beside it, the display face leaves too little room for a
+            one-word name like "Luckydreams", which would break mid-word. */}
+        <div className="mt-3.5 grid grid-cols-1 items-center gap-x-5 gap-y-4 rounded-[26px] border-2 border-brand p-5 shadow-[0_6px_0_var(--color-brand-dark)] min-[26rem]:grid-cols-[88px_minmax(0,1fr)] sm:grid-cols-[150px_minmax(0,1fr)] sm:p-[22px] lg:grid-cols-[180px_minmax(0,1fr)_auto]">
           <LogoTile casino={casino} className="h-[88px] w-[88px] rounded-[18px] sm:h-[110px] sm:w-[150px] lg:w-[180px]" sizes="180px" />
           <div className="flex min-w-0 flex-col gap-2">
-            <h1 className="font-display text-[26px] font-bold leading-tight text-ink sm:text-[32px]">{casino.name}</h1>
+            <h1 className="font-display text-[26px] font-bold leading-tight text-ink [overflow-wrap:anywhere] sm:text-[32px]">{casino.name}</h1>
             <p className="flex items-center gap-2 text-sm font-semibold text-muted">
               <Stars rating={casino.rating} />
               {casino.rating.toFixed(1)}
             </p>
             {casino.bonuses && <p className="font-display text-lg font-bold text-brand">{casino.bonuses}</p>}
           </div>
-          <a href={casino.attachment.affiliate_url} target="_blank" rel="nofollow sponsored noopener" className="btn-blue col-span-2 inline-flex min-h-12 items-center justify-center whitespace-nowrap px-8 text-[15px] font-bold lg:col-span-1">
+          <a href={casino.attachment.affiliate_url} target="_blank" rel="nofollow sponsored noopener" className="btn-blue col-span-full inline-flex min-h-12 items-center justify-center whitespace-nowrap px-8 text-[15px] font-bold lg:col-span-1">
             {COPY.casinos.visitCasino}
           </a>
         </div>

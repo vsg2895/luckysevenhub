@@ -47,7 +47,7 @@ export default function CasinoCard({ casino }: { casino: CasinoWithAttachment; r
       {/* 15px on a phone, where two cards share 375px: "Luckydreams" in
           Unbounded is wider than a 128px card at 17px. A name longer still
           breaks rather than running into the border. */}
-      <h3 className="font-display text-[15px] font-bold leading-[1.2] text-ink [overflow-wrap:anywhere] min-[420px]:text-[17px] md:text-[20px] lg:text-[22px]">{casino.name}</h3>
+      <h3 className="font-display text-[14px] font-bold leading-[1.2] text-ink [overflow-wrap:anywhere] min-[390px]:text-[15px] min-[420px]:text-[17px] md:text-[20px] lg:text-[22px]">{casino.name}</h3>
       <p className="flex items-center gap-1.5 text-[13px] font-semibold text-muted lg:text-sm">
         <Stars rating={casino.rating} />
         {casino.rating.toFixed(1)}

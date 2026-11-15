@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { resolveImageUrl } from '@/lib/images'
 import { COPY } from '@/constants/copy'
 import type { BonusSection } from '@/lib/api'
 
@@ -66,7 +67,14 @@ export default function BonusCategoryNav({ sections }: { sections: BonusSection[
               href={`/bonuses/${section.slug}`}
               className={`flex h-full min-h-[120px] flex-col-reverse items-start justify-between gap-2 rounded-[22px] p-[18px] transition-transform hover:-translate-y-[3px] sm:flex-row sm:items-end sm:gap-3 sm:p-[22px] lg:min-h-[150px] ${TILE_COLOURS[i % TILE_COLOURS.length]}`}
             >
-              <span className="min-w-0 font-display text-[15px] font-bold leading-[1.2] [overflow-wrap:anywhere] sm:text-base lg:text-lg">{section.name}</span>
+              <span className="min-w-0 font-display text-[15px] font-bold leading-[1.2] [overflow-wrap:anywhere] sm:text-base lg:text-lg">
+                {/* The type's own icon, as in the Bonus menu. A plain <img>: next/image
+                    refuses SVG. alt="" because the label names it. */}
+                {section.icon_path && (
+                  <img src={resolveImageUrl(section.icon_path)!} alt="" width={28} height={28} className="mb-2 block h-7 w-7" />
+                )}
+                {section.name}
+              </span>
               <span className="shrink-0 font-display text-[40px] font-extrabold leading-[0.9] lg:text-[56px]">
                 {section.offers_count}
                 <span className="sr-only"> {section.offers_count === 1 ? COPY.bonusCategory.countOne : COPY.bonusCategory.countMany}</span>
