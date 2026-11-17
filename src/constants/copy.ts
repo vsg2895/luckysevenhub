@@ -148,7 +148,7 @@ export const COPY = {
   newsletter: {
     title: 'Seven Fresh Offers, Every Friday.',
     subtitle: 'Only bonuses that pass all seven checks — plus any casino that dropped off the list, and why.',
-    placeholder: 'Email address',
+    placeholder: 'Email when a casino passes all seven',
     button: 'Subscribe',
     // Shown while the address is being checked. The subscribe request now
     // waits on a live address-validation call, so the button has to say so
@@ -204,6 +204,9 @@ export const COPY = {
     ratingLabel: 'Rating',
     titleLabel: 'Headline (optional)',
     bodyLabel: 'Your review',
+    namePlaceholder: 'First name or nickname',
+    emailPlaceholder: 'you@example.com',
+    titlePlaceholder: 'One line on which checks it passed',
     bodyPlaceholder: 'What was your experience \u2014 payouts, support, verification?',
     submit: 'Submit Review',
     // Two outcomes, because the site can run pre- or post-moderation
